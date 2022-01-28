@@ -4,22 +4,18 @@ var bcrypt = require("bcrypt");
 //define database model
 
 exports.comparePassword = (data, result) => {
-  db.query(
-    "SELECT * FROM users WHERE username = ?",
-    [data.username],
-    (error, results, fields) => {
-      if (bcrypt.compareSync(data.password, results[0].password)) {
-        const data = {
-          id: results[0].id,
-          username: results[0].username,
-          token: results[0].token,
-        };
-        result(null, data);
-      } else {
-        result(null, 0);
-      }
+  db.query("SELECT * FROM users WHERE username = ?", [data.username], (error, results, fields) => {
+    if (bcrypt.compareSync(data.password, results[0].password)) {
+      const data = {
+        id: results[0].id,
+        username: results[0].username,
+        token: results[0].token,
+      };
+      result(null, data);
+    } else {
+      result(null, 0);
     }
-  );
+  });
 };
 
 exports.findOneByToken = (data, result) => {
@@ -79,10 +75,7 @@ exports.create = (data, result) => {
     if (row.affectedRows) {
       let sqlQueryForDetail = `INSERT INTO users_detail SET user_id = ${row.insertId}, fullname = '${data.fullname}', phone = ${data.phone}, note = '${data.note}'`;
       db.query(sqlQueryForDetail, (err, datas) => {
-        return result(
-          null,
-          JSON.stringify({ id: datas.insertId, token: data.token })
-        );
+        return result(null, JSON.stringify({ id: datas.insertId, token: data.token }));
       });
     }
   });

@@ -49,6 +49,7 @@ exports.getDetail = (req, res) => {
     if (err) {
       error.handling(err, res);
     } else {
+      console.log(res);
       res.send(result);
     }
   });
